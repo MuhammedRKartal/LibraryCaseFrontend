@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import BooksGrid from "./components/BooksGrid";
+import { Loading } from "./components/Loading";
 import MembersGrid from "./components/MembersGrid";
 import { RootState } from "./store";
 import { setTabIndex } from "./store/tabSlice";
@@ -38,13 +39,15 @@ const App = () => {
   }, [tabIndex]);
 
   return (
-    <Box sx={{ padding: { xs: 2, md: 4 }, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
+    <Box sx={{ padding: { xs: 2, md: 4 } }}>
       <Tabs value={tabIndex} onChange={handleChange}>
         <Tab label="Members" />
         <Tab label="Books" />
       </Tabs>
-      {tabIndex === 0 && members && <MembersGrid members={members} />}
-      {tabIndex === 1 && books && <BooksGrid books={books} />}
+      <Suspense fallback={<Loading />}>
+        {tabIndex === 0 && members && <MembersGrid members={members} />}
+        {tabIndex === 1 && books && <BooksGrid books={books} />}
+      </Suspense>
     </Box>
   );
 };

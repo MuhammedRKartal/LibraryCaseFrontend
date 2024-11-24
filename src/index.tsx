@@ -6,6 +6,7 @@ import App from "./App";
 import { store } from "./store";
 import BookDetails from "./views/BookDetails";
 import MemberDetails from "./views/MemberDetails";
+import "./styles/global.scss";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 

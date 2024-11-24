@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { BookCard } from "../../components/BookCard";
+import { Loading } from "../../components/Loading";
 import { BookDetailsType } from "../../types/index";
 
 const MemberDetails = () => {
@@ -29,34 +30,36 @@ const MemberDetails = () => {
     fetchBook();
   }, [book_id]);
 
-  if (!book) return <div>Loading...</div>;
+  if (!book) return;
 
   return (
-    <Box sx={{ padding: { xs: 2, md: 4 }, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={3}
-        sx={{ flexDirection: { xs: "column", sm: "row" }, gap: { xs: 2, sm: 0 } }}
-      >
-        <Button component={Link} to="/" variant="contained" color="primary">
-          Back to Homepage
-        </Button>
-        <Typography variant="h4" fontWeight="bold" color="primary">
-          Book Details
-        </Typography>
+    <Suspense fallback={<Loading />}>
+      <Box sx={{ padding: { xs: 2, md: 4 } }}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+          sx={{ flexDirection: { xs: "column", sm: "row" }, gap: { xs: 2, sm: 0 } }}
+        >
+          <Button component={Link} to="/" variant="contained" color="primary">
+            Back to Homepage
+          </Button>
+          <Typography variant="h4" fontWeight="bold" color="primary">
+            Book Details
+          </Typography>
+        </Box>
+        <Paper
+          elevation={3}
+          sx={{
+            padding: { xs: 2, sm: 3 },
+            backgroundColor: "#fff",
+          }}
+        >
+          <BookCard book={book.book} currentOwner={book.currentOwner} />
+        </Paper>
       </Box>
-      <Paper
-        elevation={3}
-        sx={{
-          padding: { xs: 2, sm: 3 },
-          backgroundColor: "#fff",
-        }}
-      >
-        <BookCard book={book.book} currentOwner={book.currentOwner} />
-      </Paper>
-    </Box>
+    </Suspense>
   );
 };
 
