@@ -10,7 +10,7 @@ export const MemberCard = ({ member }: MemberCardType) => {
   return (
     <Paper
       sx={{
-        minWidth: 345,
+        minWidth: 300,
         mt: 4,
         p: 2,
         borderRadius: 3,

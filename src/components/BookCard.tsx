@@ -24,7 +24,7 @@ export const BookCard = ({ book, currentOwner }: BookCardProps) => {
     <>
       <Paper
         sx={{
-          width: 340,
+          maxWidth: 340,
           minHeight: 500,
           p: 3,
           mx: "auto",

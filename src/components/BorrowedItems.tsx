@@ -25,7 +25,7 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
   return (
     <>
       {borrows.map(borrow => (
-        <Grid2 size={{ xs: 12, sm: 6, md: 4, xl: 2.65 }} key={borrow.id}>
+        <Grid2 size={{ xs: 12, sm: 6, md: 4, xl: 2.35 }} key={borrow.id}>
           <Paper
             sx={{
               p: 2,
