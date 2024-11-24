@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import BooksGrid from "./components/BooksGrid";
 import MembersGrid from "./components/MembersGrid";
+import { RootState } from "./store";
+import { setTabIndex } from "./store/tabSlice";
 import { BookType, MemberType } from "./types";
 
 const App = () => {
-  const [tabIndex, setTabIndex] = useState(0);
-  const [members, setMembers] = useState<MemberType[]>([]);
-  const [books, setBooks] = useState<BookType[]>([]);
+  const dispatch = useDispatch();
+  const tabIndex = useSelector((state: RootState) => state.tab.index);
+  const [members, setMembers] = React.useState<MemberType[]>([]);
+  const [books, setBooks] = React.useState<BookType[]>([]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabIndex(newValue);
+    dispatch(setTabIndex(newValue));
   };
-
-  /**  To do less server operations in this part we can do
-      if(members.length == 0){
-        fetch
-      }
-      in fetches
-  */
 
   const fetchMembers = () => {
     fetch(`${process.env.REACT_APP_BACKEND_URL}/members`)
