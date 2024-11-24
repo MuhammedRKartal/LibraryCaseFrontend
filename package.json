@@ -1,0 +1,46 @@
+{
+  "name": "case-study-frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve",
+    "build": "webpack"
+  },
+  "author": "Muhammed Kartal",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@mui/icons-material": "^6.1.8",
+    "@mui/material": "^6.1.8",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.0.1",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "eslint-webpack-plugin": "^4.2.0",
+    "html-webpack-plugin": "^5.6.3",
+    "prettier": "^3.3.3",
+    "sass": "^1.81.0",
+    "sass-loader": "^16.0.3",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-merge": "^6.0.1"
+  }
+}

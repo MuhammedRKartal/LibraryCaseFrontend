@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "lib": ["DOM", "ES6"],
+    "jsx": "react",
+    "module": "ES6",
+    "moduleResolution": "bundler",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "paths": {
+    "@/*": ["./src/*"],
+    "react": ["./node_modules/@types/react"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
