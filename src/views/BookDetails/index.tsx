@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { BookCard } from "../../components/BookCard";
 import { BookDetailsType } from "../../types/index";
@@ -12,7 +12,7 @@ const MemberDetails = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/books/${book_id}`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books/${book_id}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch book data");
@@ -47,7 +47,15 @@ const MemberDetails = () => {
           Book Details
         </Typography>
       </Box>
-      <BookCard book={book.book} currentOwner={book.currentOwner} />
+      <Paper
+        elevation={3}
+        sx={{
+          padding: { xs: 2, sm: 3 },
+          backgroundColor: "#fff",
+        }}
+      >
+        <BookCard book={book.book} currentOwner={book.currentOwner} />
+      </Paper>
     </Box>
   );
 };

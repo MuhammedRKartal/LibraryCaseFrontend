@@ -23,8 +23,7 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
 
   useEffect(() => {
     if (open) {
-      // Fetch members when modal opens
-      fetch("http://localhost:5000/members")
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/members`)
         .then(response => response.json())
         .then(data => setMembers(data))
         .catch(error => console.error("Error fetching members:", error));
@@ -33,13 +32,13 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
 
   const handleAssign = () => {
     if (selectedMember) {
-      fetch(`http://localhost:5000/members/${selectedMember}/borrow/${bookId}`, {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/members/${selectedMember}/borrow/${bookId}`, {
         method: "POST",
       })
         .then(response => {
           if (response.ok) {
             console.log("Book assigned successfully");
-            onClose(); // Close modal on success
+            onClose();
           } else {
             console.error("Failed to assign the book");
           }

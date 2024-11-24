@@ -10,10 +10,13 @@ export const MemberCard = ({ member }: MemberCardType) => {
   return (
     <Paper
       sx={{
-        maxWidth: 345,
+        minWidth: 345,
         mt: 4,
         p: 2,
         borderRadius: 3,
+        borderLeft: "2px solid #3f51b5",
+        boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+        background: "#f5f5f5",
       }}
     >
       <Box

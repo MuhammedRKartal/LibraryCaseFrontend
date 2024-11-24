@@ -21,13 +21,13 @@ const App = () => {
   */
 
   const fetchMembers = () => {
-    fetch("http://localhost:5000/members")
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/members`)
       .then(response => response.json())
       .then(data => setMembers(data));
   };
 
   const fetchBooks = () => {
-    fetch("http://localhost:5000/books")
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/books`)
       .then(response => response.json())
       .then(data => setBooks(data));
   };
@@ -41,7 +41,7 @@ const App = () => {
   }, [tabIndex]);
 
   return (
-    <Box>
+    <Box sx={{ padding: { xs: 2, md: 4 }, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
       <Tabs value={tabIndex} onChange={handleChange}>
         <Tab label="Members" />
         <Tab label="Books" />

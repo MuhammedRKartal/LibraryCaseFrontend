@@ -13,7 +13,7 @@ const MemberDetails = () => {
   useEffect(() => {
     const fetchMember = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/members/${member_id}`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/members/${member_id}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch member data");
@@ -53,19 +53,26 @@ const MemberDetails = () => {
         elevation={3}
         sx={{
           padding: { xs: 2, sm: 3 },
-          borderRadius: 2,
           backgroundColor: "#fff",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <MemberCard member={member.member} />
 
-        <Box mt={4}>
+        <Box mt={4} sx={{ width: "100%" }}>
           {member.currentBorrows.length > 0 && (
             <>
-              <Typography variant="h5" gutterBottom sx={{ mt: 4, color: "#1976d2" }}>
+              <Typography
+                variant="h5"
+                gutterBottom
+                sx={{ mt: 4, color: "#1976d2", textAlign: "center" }}
+              >
                 Current Borrows
               </Typography>
-              <Grid2 container spacing={2}>
+              <Grid2 container spacing={2} sx={{ display: "flex", justifyContent: "center" }}>
                 <BorrowedItems borrows={member.currentBorrows} />
               </Grid2>
             </>
@@ -73,10 +80,14 @@ const MemberDetails = () => {
 
           {member.previousBorrows.length > 0 && (
             <>
-              <Typography variant="h5" gutterBottom sx={{ mt: 6, color: "#1976d2" }}>
+              <Typography
+                variant="h5"
+                gutterBottom
+                sx={{ mt: 6, color: "#1976d2", textAlign: "center" }}
+              >
                 Previous Borrows
               </Typography>
-              <Grid2 container spacing={2}>
+              <Grid2 container spacing={2} sx={{ display: "flex", justifyContent: "center" }}>
                 <BorrowedItems borrows={member.previousBorrows} />
               </Grid2>
             </>

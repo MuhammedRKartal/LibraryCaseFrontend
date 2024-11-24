@@ -28,7 +28,7 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
 
   const handleSendRating = async (rating: number) => {
     if (selectedBorrow) {
-      const endpoint = `http://localhost:5000/members/${selectedBorrow.memberId}/return/${selectedBorrow.book.id}`;
+      const endpoint = `${process.env.REACT_APP_BACKEND_URL}/members/${selectedBorrow.memberId}/return/${selectedBorrow.book.id}`;
       const body = { rating: rating };
 
       try {
@@ -52,7 +52,15 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
     <>
       {borrows.map(borrow => (
         <Grid2 size={{ xs: 12, sm: 6, md: 4, xl: 2.65 }} key={borrow.id}>
-          <Paper sx={{ p: 2, borderRadius: 3, position: "relative" }}>
+          <Paper
+            sx={{
+              p: 2,
+              borderRadius: 3,
+              position: "relative",
+              boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+              background: "#f5f5f5",
+            }}
+          >
             <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
               {borrow.book.name}
             </Typography>
