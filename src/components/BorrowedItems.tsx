@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import { Grid2, IconButton, Paper, Typography } from "@mui/material";
+import { Alert, Grid2, IconButton, Paper, Snackbar, Typography } from "@mui/material";
 import { BorrowedItemType } from "../types";
 import { ReturnBookModal } from "../views/modals/ReturnBookModal";
-
-//The borrow.returnedAt!, ! in there is telling typescript to borrow.returnedAt is not null or undefined
 
 interface BorrowedItemProps {
   borrows: BorrowedItemType[];
@@ -14,6 +12,9 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedBorrow, setSelectedBorrow] = useState<BorrowedItemType | null>(null);
   const [, setRating] = useState<number>(0);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
   const handleOpenModal = (borrow: BorrowedItemType) => {
     setSelectedBorrow(borrow);
@@ -24,6 +25,10 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
     setOpenModal(false);
     setSelectedBorrow(null);
     setRating(0);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   const handleSendRating = async (rating: number) => {
@@ -41,10 +46,22 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
         });
 
         if (response.ok) {
+          setSnackbarSeverity("success");
+          setSnackbarMessage("Book returned successfully!");
+          setSnackbarOpen(true);
           handleCloseModal();
         } else {
+          const errorMessage = await response.json();
+
+          setSnackbarSeverity("error");
+          setSnackbarMessage(`Error: ${errorMessage.error}`);
+          setSnackbarOpen(true);
         }
-      } catch {}
+      } catch (error) {
+        setSnackbarSeverity("error");
+        setSnackbarMessage(`Error: ${error.message}`);
+        setSnackbarOpen(true);
+      }
     }
   };
 
@@ -100,6 +117,17 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
           bookName={selectedBorrow.book.name}
         />
       )}
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: "100%" }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

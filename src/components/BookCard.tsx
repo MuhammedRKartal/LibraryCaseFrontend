@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button, Paper, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 import { BookType, MemberType } from "../types";
 import { AssignOwnerModal } from "../views/modals/AssignOwnerModal";
 
@@ -47,10 +48,30 @@ export const BookCard = ({ book, currentOwner }: BookCardProps) => {
             <strong>{book.author}</strong>
           </Typography>
         </Box>
-        <Box sx={{ mb: 8, textAlign: "center" }}>
+        <Box
+          sx={{
+            mb: 8,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           {currentOwner ? (
-            <Typography variant="body1" sx={{ display: "flex", flexDirection: "column" }}>
-              <strong>Current Owner:</strong> {currentOwner.name!}
+            <Typography
+              variant="body1"
+              sx={{ display: "flex", flexDirection: "column", textAlign: "center" }}
+            >
+              <strong>Current Owner:</strong>{" "}
+              <Button
+                component={Link}
+                to={`/members/${currentOwner.id}`}
+                variant="text"
+                color="primary"
+                sx={{ width: "fit-content" }}
+              >
+                {currentOwner.name!}
+              </Button>
             </Typography>
           ) : (
             <Button variant="contained" onClick={handleOpenModal}>

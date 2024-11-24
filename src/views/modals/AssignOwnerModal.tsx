@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Box,
   Button,
   FormControl,
@@ -7,6 +8,7 @@ import {
   MenuItem,
   Modal,
   Select,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import { MemberType } from "../../types";
@@ -20,13 +22,21 @@ interface AssignOwnerModalProps {
 export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProps) => {
   const [members, setMembers] = useState<MemberType[]>([]);
   const [selectedMember, setSelectedMember] = useState<string>("");
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
   useEffect(() => {
     if (open) {
       fetch(`${process.env.REACT_APP_BACKEND_URL}/members`)
         .then(response => response.json())
         .then(data => setMembers(data))
-        .catch(error => console.error("Error fetching members:", error));
+        .catch(error => {
+          console.error("Error fetching members:", error);
+          setSnackbarMessage("Failed to fetch members");
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
+        });
     }
   }, [open]);
 
@@ -35,65 +45,93 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
       fetch(`${process.env.REACT_APP_BACKEND_URL}/members/${selectedMember}/borrow/${bookId}`, {
         method: "POST",
       })
-        .then(response => {
+        .then(async response => {
           if (response.ok) {
-            console.log("Book assigned successfully");
+            setSnackbarMessage("Book assigned successfully!");
+            setSnackbarSeverity("success");
+            setSnackbarOpen(true);
             onClose();
           } else {
-            console.error("Failed to assign the book");
+            const errorMessage = await response.json();
+
+            setSnackbarSeverity("error");
+            setSnackbarMessage(`Error: ${errorMessage.error}`);
+            setSnackbarOpen(true);
           }
         })
-        .catch(error => console.error("Error:", error));
+        .catch(error => {
+          console.error("Error:", error);
+          setSnackbarMessage("Error occurred during assignment");
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
+        });
     }
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby="assign-owner-modal">
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 400,
-          bgcolor: "background.paper",
-          borderRadius: 2,
-          p: 4,
-          boxShadow: 24,
-        }}
-      >
-        <Typography id="assign-owner-modal" variant="h6" component="h2" sx={{ mb: 2 }}>
-          Assign Owner
-        </Typography>
-        <FormControl fullWidth>
-          <InputLabel id="select-member-label">Select Member</InputLabel>
-          <Select
-            labelId="select-member-label"
-            value={selectedMember}
-            onChange={e => setSelectedMember(e.target.value as string)}
-            label="Select Member"
-          >
-            {members.map(member => (
-              <MenuItem key={member.id} value={member.id}>
-                {member.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Box sx={{ mt: 3, display: "flex", justifyContent: "space-between" }}>
-          <Button onClick={onClose} variant="outlined">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleAssign}
-            variant="contained"
-            color="primary"
-            disabled={!selectedMember}
-          >
-            Assign
-          </Button>
+    <>
+      <Modal open={open} onClose={onClose} aria-labelledby="assign-owner-modal">
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            p: 4,
+            boxShadow: 24,
+          }}
+        >
+          <Typography id="assign-owner-modal" variant="h6" component="h2" sx={{ mb: 2 }}>
+            Assign Owner
+          </Typography>
+          <FormControl fullWidth>
+            <InputLabel id="select-member-label">Select Member</InputLabel>
+            <Select
+              labelId="select-member-label"
+              value={selectedMember}
+              onChange={e => setSelectedMember(e.target.value as string)}
+              label="Select Member"
+            >
+              {members.map(member => (
+                <MenuItem key={member.id} value={member.id}>
+                  {member.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Box sx={{ mt: 3, display: "flex", justifyContent: "space-between" }}>
+            <Button onClick={onClose} variant="outlined">
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAssign}
+              variant="contained"
+              color="primary"
+              disabled={!selectedMember}
+            >
+              Assign
+            </Button>
+          </Box>
         </Box>
-      </Box>
-    </Modal>
+      </Modal>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
