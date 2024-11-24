@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Alert,
   Box,
   Button,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Modal,
@@ -31,8 +33,7 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
       fetch(`${process.env.REACT_APP_BACKEND_URL}/members`)
         .then(response => response.json())
         .then(data => setMembers(data))
-        .catch(error => {
-          console.error("Error fetching members:", error);
+        .catch(() => {
           setSnackbarMessage("Failed to fetch members");
           setSnackbarSeverity("error");
           setSnackbarOpen(true);
@@ -47,10 +48,8 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
       })
         .then(async response => {
           if (response.ok) {
-            setSnackbarMessage("Book assigned successfully!");
-            setSnackbarSeverity("success");
-            setSnackbarOpen(true);
             onClose();
+            window.location.reload();
           } else {
             const errorMessage = await response.json();
 
@@ -88,6 +87,9 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
             boxShadow: 24,
           }}
         >
+          <IconButton onClick={onClose} sx={{ position: "absolute", top: 1, right: 1 }}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
           <Typography id="assign-owner-modal" variant="h6" component="h2" sx={{ mb: 2 }}>
             Assign Owner
           </Typography>

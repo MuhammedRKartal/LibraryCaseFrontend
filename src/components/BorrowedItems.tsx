@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import { Alert, Grid2, IconButton, Paper, Snackbar, Typography } from "@mui/material";
+import { Grid2, IconButton, Paper, Typography } from "@mui/material";
 import { BorrowedItemType } from "../types";
 import { ReturnBookModal } from "../views/modals/ReturnBookModal";
 
@@ -11,10 +11,6 @@ interface BorrowedItemProps {
 export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedBorrow, setSelectedBorrow] = useState<BorrowedItemType | null>(null);
-  const [, setRating] = useState<number>(0);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
   const handleOpenModal = (borrow: BorrowedItemType) => {
     setSelectedBorrow(borrow);
@@ -24,45 +20,6 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
   const handleCloseModal = () => {
     setOpenModal(false);
     setSelectedBorrow(null);
-    setRating(0);
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
-
-  const handleSendRating = async (rating: number) => {
-    if (selectedBorrow) {
-      const endpoint = `${process.env.REACT_APP_BACKEND_URL}/members/${selectedBorrow.memberId}/return/${selectedBorrow.book.id}`;
-      const body = { rating: rating };
-
-      try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
-
-        if (response.ok) {
-          setSnackbarSeverity("success");
-          setSnackbarMessage("Book returned successfully!");
-          setSnackbarOpen(true);
-          handleCloseModal();
-        } else {
-          const errorMessage = await response.json();
-
-          setSnackbarSeverity("error");
-          setSnackbarMessage(`Error: ${errorMessage.error}`);
-          setSnackbarOpen(true);
-        }
-      } catch (error) {
-        setSnackbarSeverity("error");
-        setSnackbarMessage(`Error: ${error.message}`);
-        setSnackbarOpen(true);
-      }
-    }
   };
 
   return (
@@ -113,21 +70,11 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
         <ReturnBookModal
           open={openModal}
           onClose={handleCloseModal}
-          onSubmit={handleSendRating}
+          memberId={selectedBorrow.memberId}
+          bookId={selectedBorrow.book.id}
           bookName={selectedBorrow.book.name}
         />
       )}
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: "100%" }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };

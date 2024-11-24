@@ -20,8 +20,6 @@ export const BookCard = ({ book, currentOwner }: BookCardProps) => {
     setIsModalOpen(false);
   };
 
-  console.log(currentOwner);
-
   return (
     <>
       <Paper
