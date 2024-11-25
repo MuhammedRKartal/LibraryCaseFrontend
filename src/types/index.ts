@@ -15,11 +15,6 @@ export type MemberType = {
   country: string;
 };
 
-export type BookDetailsType = {
-  book: BookType;
-  currentOwner: MemberType | null;
-};
-
 export type BorrowedItemType = {
   id: number;
   memberId: number;
@@ -31,8 +26,24 @@ export type BorrowedItemType = {
   book: BookType;
 };
 
+export type BookDetailsType = {
+  id: number;
+  name: string;
+  author: string;
+  publishYear: string;
+  publisher: string;
+  rating: number | null;
+  currentOwner: MemberType | null;
+};
+
 export type MemberDetailsType = {
-  member: MemberType;
-  previousBorrows: BorrowedItemType[];
-  currentBorrows: BorrowedItemType[];
+  id: number;
+  name: string;
+  age: number;
+  gender: string;
+  country: string;
+  borrows: {
+    past: BorrowedItemType[];
+    present: BorrowedItemType[];
+  };
 };

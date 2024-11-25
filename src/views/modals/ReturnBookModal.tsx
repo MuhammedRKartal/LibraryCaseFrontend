@@ -17,6 +17,7 @@ interface ReturnBookModalProps {
   memberId: number;
   bookId: number;
   bookName: string;
+  refetchMember: () => void;
 }
 
 export const ReturnBookModal = ({
@@ -25,39 +26,43 @@ export const ReturnBookModal = ({
   memberId,
   bookId,
   bookName,
+  refetchMember,
 }: ReturnBookModalProps) => {
   const [rating, setRating] = useState<number>(0);
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
-  const handleSendRating = async () => {
-    const endpoint = `${process.env.REACT_APP_BACKEND_URL}/users/${memberId}/return/${bookId}`;
+  const handleReturnBook = () => {
     const body = { rating };
 
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${memberId}/return/${bookId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+      .then(async response => {
+        if (response.ok) {
+          setSnackbarSeverity("success");
+          setSnackbarMessage(`Success: Book is Successfully Returned.`);
+          setRating(0);
+          refetchMember();
+          onClose();
+        } else {
+          const error = await response.json();
 
-      if (response.ok) {
-        setRating(0);
-        onClose();
-        window.location.reload();
-      } else {
-        const errorMessage = await response.json();
-
+          setSnackbarSeverity("error");
+          setSnackbarMessage(`Error: ${error.error}`);
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        setSnackbarMessage("Error occurred during assignment");
         setSnackbarSeverity("error");
-        setSnackbarMessage(`Error: ${errorMessage.error}`);
+      })
+      .finally(() => {
         setSnackbarOpen(true);
-      }
-    } catch (error) {
-      setSnackbarSeverity("error");
-      setSnackbarMessage(`Error: ${error.message}`);
-      setSnackbarOpen(true);
-    }
+      });
   };
 
   const handleSnackbarClose = () => {
@@ -105,7 +110,7 @@ export const ReturnBookModal = ({
               variant="contained"
               size="small"
               color="primary"
-              onClick={handleSendRating}
+              onClick={handleReturnBook}
               disabled={!rating || isNaN(rating)}
               sx={{ px: 2 }}
             >
@@ -119,7 +124,7 @@ export const ReturnBookModal = ({
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
           {snackbarMessage}

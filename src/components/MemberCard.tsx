@@ -1,9 +1,9 @@
 import React from "react";
 import { Avatar, Box, Paper, Typography } from "@mui/material";
-import { MemberType } from "../types";
+import { MemberDetailsType } from "../types";
 
 interface MemberCardType {
-  member: MemberType;
+  member: MemberDetailsType;
 }
 
 export const MemberCard = ({ member }: MemberCardType) => {

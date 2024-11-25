@@ -6,9 +6,10 @@ import { ReturnBookModal } from "../views/modals/ReturnBookModal";
 
 interface BorrowedItemProps {
   borrows: BorrowedItemType[];
+  refetchMember: () => void;
 }
 
-export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
+export const BorrowedItems = ({ borrows, refetchMember }: BorrowedItemProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedBorrow, setSelectedBorrow] = useState<BorrowedItemType | null>(null);
 
@@ -79,6 +80,7 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
           memberId={selectedBorrow.memberId}
           bookId={selectedBorrow.book.id}
           bookName={selectedBorrow.book.name}
+          refetchMember={refetchMember}
         />
       )}
     </>

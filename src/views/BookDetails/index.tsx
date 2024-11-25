@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { BookCard } from "../../components/BookCard";
@@ -10,23 +10,23 @@ const MemberDetails = () => {
 
   const [book, setBook] = useState<BookDetailsType | null>(null);
 
-  useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books/${book_id}`);
+  const fetchBook = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books/${book_id}`);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch book data");
-        }
-
-        const data = await response.json();
-
-        setBook(data);
-      } catch {
-        setBook(null);
+      if (!response.ok) {
+        throw new Error("Failed to fetch book data");
       }
-    };
 
+      const data = await response.json();
+
+      setBook(data);
+    } catch {
+      setBook(null);
+    }
+  }, [book_id]);
+
+  useEffect(() => {
     fetchBook();
   }, [book_id]);
 
@@ -56,7 +56,7 @@ const MemberDetails = () => {
             backgroundColor: "#fff",
           }}
         >
-          <BookCard book={book.book} currentOwner={book.currentOwner} />
+          <BookCard book={book} refetchBook={fetchBook} />
         </Paper>
       </Box>
     </Suspense>

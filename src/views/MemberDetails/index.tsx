@@ -1,37 +1,36 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { Box, Button, Grid2, Paper, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { BorrowedItems } from "../../components/BorrowedItems";
 import { Loading } from "../../components/Loading";
 import { MemberCard } from "../../components/MemberCard";
-import { MemberDetailsType } from "../../types/index";
+import { MemberDetailsType } from "../../types";
 
 const MemberDetails = () => {
   const { member_id } = useParams();
 
   const [member, setMember] = useState<MemberDetailsType | null>(null);
 
-  useEffect(() => {
-    const fetchMember = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${member_id}`);
+  const fetchMember = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${member_id}`);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch member data");
-        }
-
-        const data = await response.json();
-
-        setMember(data);
-      } catch {
-        setMember(null);
+      if (!response.ok) {
+        throw new Error("Failed to fetch member data");
       }
-    };
+      const data = await response.json();
 
+      setMember(data);
+    } catch {
+      setMember(null);
+    }
+  }, [member_id]);
+
+  useEffect(() => {
     fetchMember();
   }, [member_id]);
 
-  if (!member) return;
+  if (!member) return null;
 
   return (
     <Suspense fallback={<Loading />}>
@@ -62,35 +61,34 @@ const MemberDetails = () => {
             alignItems: "center",
           }}
         >
-          <MemberCard member={member.member} />
-
+          <MemberCard member={member} />
           <Box mt={4} sx={{ width: "100%" }}>
-            {member.currentBorrows.length > 0 && (
+            {member.borrows.present.length > 0 && (
               <>
                 <Typography
                   variant="h5"
                   gutterBottom
                   sx={{ mt: 4, color: "#1976d2", textAlign: "center" }}
                 >
-                  Current Borrows
+                  Present Borrows
                 </Typography>
                 <Grid2 container spacing={2} sx={{ display: "flex", justifyContent: "center" }}>
-                  <BorrowedItems borrows={member.currentBorrows} />
+                  <BorrowedItems borrows={member.borrows.present} refetchMember={fetchMember} />
                 </Grid2>
               </>
             )}
 
-            {member.previousBorrows.length > 0 && (
+            {member.borrows.past.length > 0 && (
               <>
                 <Typography
                   variant="h5"
                   gutterBottom
                   sx={{ mt: 6, color: "#1976d2", textAlign: "center" }}
                 >
-                  Previous Borrows
+                  Past Borrows
                 </Typography>
                 <Grid2 container spacing={2} sx={{ display: "flex", justifyContent: "center" }}>
-                  <BorrowedItems borrows={member.previousBorrows} />
+                  <BorrowedItems borrows={member.borrows.past} refetchMember={fetchMember} />
                 </Grid2>
               </>
             )}

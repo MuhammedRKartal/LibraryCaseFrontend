@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import { BookType, MemberType } from "../types";
+import { BookDetailsType } from "../types";
 import { AssignOwnerModal } from "../views/modals/AssignOwnerModal";
 
 interface BookCardProps {
-  book: BookType;
-  currentOwner: MemberType | null;
+  book: BookDetailsType;
+  refetchBook: () => void;
 }
 
-export const BookCard = ({ book, currentOwner }: BookCardProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export const BookCard = ({ book, refetchBook }: BookCardProps) => {
+  const [openModal, setOpenModal] = useState(false);
 
   const handleOpenModal = () => {
-    setIsModalOpen(true);
+    setOpenModal(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    setOpenModal(false);
   };
 
   return (
@@ -55,7 +55,7 @@ export const BookCard = ({ book, currentOwner }: BookCardProps) => {
             alignItems: "center",
           }}
         >
-          {currentOwner ? (
+          {book.currentOwner ? (
             <Typography
               variant="body1"
               sx={{ display: "flex", flexDirection: "column", textAlign: "center" }}
@@ -63,12 +63,12 @@ export const BookCard = ({ book, currentOwner }: BookCardProps) => {
               <strong>Current Owner:</strong>{" "}
               <Button
                 component={Link}
-                to={`/members/${currentOwner.id}`}
+                to={`/members/${book.currentOwner.id}`}
                 variant="text"
                 color="primary"
                 sx={{ width: "fit-content", textTransform: "capitalize" }}
               >
-                {currentOwner.name!}
+                {book.currentOwner.name!}
               </Button>
             </Typography>
           ) : (
@@ -90,8 +90,12 @@ export const BookCard = ({ book, currentOwner }: BookCardProps) => {
         </Box>
       </Paper>
 
-      {/* Modal for assigning owner */}
-      <AssignOwnerModal open={isModalOpen} onClose={handleCloseModal} bookId={book.id} />
+      <AssignOwnerModal
+        open={openModal}
+        onClose={handleCloseModal}
+        bookId={book.id}
+        refetchBook={refetchBook}
+      />
     </>
   );
 };

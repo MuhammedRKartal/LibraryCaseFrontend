@@ -19,9 +19,10 @@ interface AssignOwnerModalProps {
   open: boolean;
   onClose: () => void;
   bookId: number;
+  refetchBook: () => void;
 }
 
-export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProps) => {
+export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignOwnerModalProps) => {
   const [members, setMembers] = useState<MemberType[]>([]);
   const [selectedMember, setSelectedMember] = useState<string>("");
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
@@ -48,20 +49,23 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
       })
         .then(async response => {
           if (response.ok) {
+            setSnackbarSeverity("success");
+            setSnackbarMessage(`Success: Book is Successfully Assigned.`);
+            refetchBook();
             onClose();
-            window.location.reload();
           } else {
-            const errorMessage = await response.json();
+            const error = await response.json();
 
             setSnackbarSeverity("error");
-            setSnackbarMessage(`Error: ${errorMessage.error}`);
-            setSnackbarOpen(true);
+            setSnackbarMessage(`Error: ${error.error}`);
           }
         })
         .catch(error => {
           console.error("Error:", error);
           setSnackbarMessage("Error occurred during assignment");
           setSnackbarSeverity("error");
+        })
+        .finally(() => {
           setSnackbarOpen(true);
         });
     }
@@ -128,7 +132,7 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
           {snackbarMessage}
