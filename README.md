@@ -17,8 +17,8 @@
 3. Run the command `yarn`
 4. Run the command `yarn dev`
 
-- If you want to build the project run `yarn build`
-- `yarn start`
+1. If you want to build the project run `yarn build`
+2. `yarn start`
 
 ## Tech Stack
 
