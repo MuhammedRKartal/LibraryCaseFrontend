@@ -98,19 +98,27 @@ export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignO
             Assign Owner
           </Typography>
           <FormControl fullWidth>
-            <InputLabel id="select-member-label">Select Member</InputLabel>
-            <Select
-              labelId="select-member-label"
-              value={selectedMember}
-              onChange={e => setSelectedMember(e.target.value as string)}
-              label="Select Member"
-            >
-              {members.map(member => (
-                <MenuItem key={member.id} value={member.id}>
-                  {member.name}
-                </MenuItem>
-              ))}
-            </Select>
+            {members ? (
+              <>
+                <InputLabel id="select-member-label">Select Member</InputLabel>
+                <Select
+                  labelId="select-member-label"
+                  value={selectedMember}
+                  onChange={e => setSelectedMember(e.target.value as string)}
+                  label="Select Member"
+                >
+                  {members.map(member => (
+                    <MenuItem key={member.id} value={member.id}>
+                      {member?.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            ) : (
+              <Typography variant="body1" color="error">
+                Error loading members.
+              </Typography>
+            )}
           </FormControl>
           <Box sx={{ mt: 3, display: "flex", justifyContent: "space-between" }}>
             <Button onClick={onClose} variant="outlined">

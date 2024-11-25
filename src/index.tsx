@@ -7,7 +7,7 @@ import { store } from "./store";
 import BookDetails from "./views/BookDetails";
 import MemberDetails from "./views/MemberDetails";
 import "./styles/global.scss";
-import Error500 from "./views/Error/500";
+import Error500 from "./views/Scenes/500";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 

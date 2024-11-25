@@ -2,10 +2,10 @@ import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { Box, Button, Grid2, Paper, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { BorrowedItems } from "../../components/BorrowedItems";
-import { Loading } from "../../components/Loading";
 import { MemberCard } from "../../components/MemberCard";
 import { MemberDetailsType } from "../../types";
-import Error500 from "../Error/500";
+import Error500 from "../Scenes/500";
+import { Loading } from "../Scenes/Loading";
 
 const MemberDetails = () => {
   const { member_id } = useParams();
@@ -70,7 +70,7 @@ const MemberDetails = () => {
         >
           <MemberCard member={member} />
           <Box mt={4} sx={{ width: "100%" }}>
-            {member.borrows.present.length > 0 && (
+            {member?.borrows?.present?.length > 0 && (
               <>
                 <Typography
                   variant="h5"
@@ -85,7 +85,7 @@ const MemberDetails = () => {
               </>
             )}
 
-            {member.borrows.past.length > 0 && (
+            {member?.borrows?.past?.length > 0 && (
               <>
                 <Typography
                   variant="h5"

@@ -2,9 +2,9 @@ import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { BookCard } from "../../components/BookCard";
-import { Loading } from "../../components/Loading";
 import { BookDetailsType } from "../../types/index";
-import Error500 from "../Error/500";
+import Error500 from "../Scenes/500";
+import { Loading } from "../Scenes/Loading";
 
 const MemberDetails = () => {
   const { book_id } = useParams();

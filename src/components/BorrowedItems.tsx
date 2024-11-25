@@ -25,8 +25,8 @@ export const BorrowedItems = ({ borrows, refetchMember }: BorrowedItemProps) => 
 
   return (
     <>
-      {borrows.map(borrow => (
-        <Grid2 size={{ xs: 12, sm: 6, md: 4, xl: 2.35 }} key={borrow.id}>
+      {borrows?.map(borrow => (
+        <Grid2 size={{ xs: 12, sm: 6, md: 4, xl: 2.35 }} key={borrow?.id}>
           <Paper
             sx={{
               p: 2,
@@ -36,21 +36,27 @@ export const BorrowedItems = ({ borrows, refetchMember }: BorrowedItemProps) => 
               background: "#f5f5f5",
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
-              {borrow.book.name}
-            </Typography>
-            <Typography fontSize={14}>
-              <strong>Author:</strong> {borrow.book.author}
-            </Typography>
-            <Typography fontSize={14}>
-              <strong>Borrowed:</strong> {new Date(borrow.borrowedAt).toLocaleDateString()}
-            </Typography>
-            {borrow.returned && (
+            {borrow.book && borrow.book.name && (
+              <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
+                {borrow.book.name}
+              </Typography>
+            )}
+            {borrow.book && borrow.book.author && (
+              <Typography fontSize={14}>
+                <strong>Author:</strong> {borrow?.book?.author}
+              </Typography>
+            )}
+            {borrow.borrowedAt && (
+              <Typography fontSize={14}>
+                <strong>Borrowed:</strong> {new Date(borrow.borrowedAt).toLocaleDateString()}
+              </Typography>
+            )}
+            {borrow.returned && borrow.returnedAt && (
               <Typography fontSize={14}>
                 <strong>Returned:</strong> {new Date(borrow.returnedAt!).toLocaleDateString()}
               </Typography>
             )}
-            {borrow.returned && (
+            {borrow.returned && borrow.rating && (
               <Typography fontSize={14}>
                 <strong>Rating:</strong> {borrow.rating ?? 0}
               </Typography>

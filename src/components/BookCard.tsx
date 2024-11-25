@@ -39,12 +39,16 @@ export const BookCard = ({ book, refetchBook }: BookCardProps) => {
         }}
       >
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1, textAlign: "center" }}>
-            {book.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center" }}>
-            <strong>{book.author}</strong>
-          </Typography>
+          {book.name && (
+            <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1, textAlign: "center" }}>
+              {book.name}
+            </Typography>
+          )}
+          {book.author && (
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center" }}>
+              <strong>{book.author}</strong>
+            </Typography>
+          )}
         </Box>
         <Box
           sx={{
@@ -78,15 +82,21 @@ export const BookCard = ({ book, refetchBook }: BookCardProps) => {
           )}
         </Box>
         <Box>
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            <strong>Average Rating:</strong> {book.rating}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            <strong>Publisher:</strong> {book.publisher}
-          </Typography>
-          <Typography variant="body2">
-            <strong>Year of Publication:</strong> {book.publishYear}
-          </Typography>
+          {book.rating && (
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              <strong>Average Rating:</strong> {book.rating}
+            </Typography>
+          )}
+          {book.publisher && (
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              <strong>Publisher:</strong> {book.publisher}
+            </Typography>
+          )}
+          {book.publishYear && (
+            <Typography variant="body2">
+              <strong>Year of Publication:</strong> {book.publishYear}
+            </Typography>
+          )}
         </Box>
       </Paper>
 

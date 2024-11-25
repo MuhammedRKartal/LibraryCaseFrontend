@@ -3,11 +3,11 @@ import { Box, Tab, Tabs } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import BooksGrid from "./components/BooksGrid";
-import { Loading } from "./components/Loading";
 import MembersGrid from "./components/MembersGrid";
 import { RootState } from "./store";
 import { setTabIndex } from "./store/tabSlice";
 import { BookType, MemberType } from "./types";
+import { Loading } from "./views/Scenes/Loading";
 
 const App = () => {
   const dispatch = useDispatch();

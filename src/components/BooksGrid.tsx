@@ -35,16 +35,16 @@ const BooksGrid = ({ books }: BookProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {books.map((book: BookType) => (
+          {books?.map((book: BookType) => (
             <TableRow key={book.id}>
-              <TableCell>{book.id}</TableCell>
-              <TableCell>{book.name}</TableCell>
-              <TableCell>{book.author}</TableCell>
-              <TableCell>{book.publisher}</TableCell>
-              <TableCell>{book.publishYear}</TableCell>
+              <TableCell>{book?.id}</TableCell>
+              <TableCell>{book?.name}</TableCell>
+              <TableCell>{book?.author}</TableCell>
+              <TableCell>{book?.publisher}</TableCell>
+              <TableCell>{book?.publishYear}</TableCell>
 
               <TableCell>
-                <IconButton onClick={() => navigate(`/books/${book.id}`)} size="small">
+                <IconButton onClick={() => navigate(`/books/${book?.id}`)} size="small">
                   <Visibility fontSize="small" />
                 </IconButton>
               </TableCell>

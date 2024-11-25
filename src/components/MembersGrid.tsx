@@ -34,16 +34,16 @@ const MembersGrid = ({ members }: MemberProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {members.map((member: MemberType) => (
-            <TableRow key={member.id}>
-              <TableCell>{member.id}</TableCell>
-              <TableCell>{member.name}</TableCell>
-              <TableCell>{member.age}</TableCell>
-              <TableCell>{member.gender}</TableCell>
-              <TableCell>{member.country}</TableCell>
+          {members?.map((member: MemberType) => (
+            <TableRow key={member?.id}>
+              <TableCell>{member?.id}</TableCell>
+              <TableCell>{member?.name}</TableCell>
+              <TableCell>{member?.age}</TableCell>
+              <TableCell>{member?.gender}</TableCell>
+              <TableCell>{member?.country}</TableCell>
 
               <TableCell>
-                <IconButton onClick={() => navigate(`/members/${member.id}`)} size="small">
+                <IconButton onClick={() => navigate(`/members/${member?.id}`)} size="small">
                   <Visibility fontSize="small" />
                 </IconButton>
               </TableCell>
