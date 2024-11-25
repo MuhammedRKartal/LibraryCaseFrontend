@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { BookCard } from "../../components/BookCard";
 import { Loading } from "../../components/Loading";
 import { BookDetailsType } from "../../types/index";
+import Error500 from "../Error/500";
 
 const MemberDetails = () => {
   const { book_id } = useParams();
@@ -30,7 +31,7 @@ const MemberDetails = () => {
     fetchBook();
   }, [book_id]);
 
-  if (!book) return;
+  if (!book) return <Error500 errorMessage={"Book not found!"} />;
 
   return (
     <Suspense fallback={<Loading />}>

@@ -5,6 +5,7 @@ import { BorrowedItems } from "../../components/BorrowedItems";
 import { Loading } from "../../components/Loading";
 import { MemberCard } from "../../components/MemberCard";
 import { MemberDetailsType } from "../../types";
+import Error500 from "../Error/500";
 
 const MemberDetails = () => {
   const { member_id } = useParams();
@@ -30,7 +31,7 @@ const MemberDetails = () => {
     fetchMember();
   }, [member_id]);
 
-  if (!member) return null;
+  if (!member) return <Error500 errorMessage={"Member not found!"} />;
 
   return (
     <Suspense fallback={<Loading />}>

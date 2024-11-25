@@ -73,16 +73,12 @@ export const BorrowedItems = ({ borrows, refetchMember }: BorrowedItemProps) => 
           </Paper>
         </Grid2>
       ))}
-      {selectedBorrow && (
-        <ReturnBookModal
-          open={openModal}
-          onClose={handleCloseModal}
-          memberId={selectedBorrow.memberId}
-          bookId={selectedBorrow.book.id}
-          bookName={selectedBorrow.book.name}
-          refetchMember={refetchMember}
-        />
-      )}
+      <ReturnBookModal
+        open={openModal}
+        onClose={handleCloseModal}
+        selectedBorrow={selectedBorrow}
+        refetchMember={refetchMember}
+      />
     </>
   );
 };

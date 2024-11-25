@@ -25,9 +25,11 @@ interface AssignOwnerModalProps {
 export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignOwnerModalProps) => {
   const [members, setMembers] = useState<MemberType[]>([]);
   const [selectedMember, setSelectedMember] = useState<string>("");
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error",
+  });
 
   useEffect(() => {
     if (open) {
@@ -35,9 +37,7 @@ export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignO
         .then(response => response.json())
         .then(data => setMembers(data))
         .catch(() => {
-          setSnackbarMessage("Failed to fetch members");
-          setSnackbarSeverity("error");
-          setSnackbarOpen(true);
+          setSnackbar({ open: true, message: "Failed to fetch members", severity: "error" });
         });
     }
   }, [open]);
@@ -49,30 +49,29 @@ export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignO
       })
         .then(async response => {
           if (response.ok) {
-            setSnackbarSeverity("success");
-            setSnackbarMessage(`Success: Book is Successfully Assigned.`);
             refetchBook();
             onClose();
           } else {
             const error = await response.json();
-
-            setSnackbarSeverity("error");
-            setSnackbarMessage(`Error: ${error.error}`);
+            setSnackbar({ open: true, message: `Error: ${error.error}`, severity: "error" });
           }
         })
         .catch(error => {
-          console.error("Error:", error);
-          setSnackbarMessage("Error occurred during assignment");
-          setSnackbarSeverity("error");
-        })
-        .finally(() => {
-          setSnackbarOpen(true);
+          setSnackbar({
+            open: true,
+            message: "Error occurred during assignment",
+            severity: "error",
+          });
         });
     }
   };
 
   const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+    setSnackbar({
+      open: false,
+      message: "",
+      severity: "error",
+    });
   };
 
   return (
@@ -129,13 +128,13 @@ export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignO
       </Modal>
 
       <Snackbar
-        open={snackbarOpen}
+        open={snackbar.open}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
-          {snackbarMessage}
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: "100%" }}>
+          {snackbar.message}
         </Alert>
       </Snackbar>
     </>

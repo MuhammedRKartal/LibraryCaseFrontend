@@ -10,63 +10,65 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { BorrowedItemType } from "../../types";
 
 interface ReturnBookModalProps {
   open: boolean;
   onClose: () => void;
-  memberId: number;
-  bookId: number;
-  bookName: string;
+  selectedBorrow: BorrowedItemType;
   refetchMember: () => void;
 }
 
 export const ReturnBookModal = ({
   open,
   onClose,
-  memberId,
-  bookId,
-  bookName,
+  selectedBorrow,
   refetchMember,
 }: ReturnBookModalProps) => {
   const [rating, setRating] = useState<number>(0);
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error",
+  });
 
   const handleReturnBook = () => {
     const body = { rating };
 
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${memberId}/return/${bookId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    })
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/users/${selectedBorrow?.memberId}/return/${selectedBorrow?.bookId}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    )
       .then(async response => {
         if (response.ok) {
-          setSnackbarSeverity("success");
-          setSnackbarMessage(`Success: Book is Successfully Returned.`);
           setRating(0);
           refetchMember();
           onClose();
         } else {
           const error = await response.json();
 
-          setSnackbarSeverity("error");
-          setSnackbarMessage(`Error: ${error.error}`);
+          setSnackbar({ open: true, message: `Error: ${error.error}`, severity: "error" });
         }
       })
       .catch(error => {
-        console.error("Error:", error);
-        setSnackbarMessage("Error occurred during assignment");
-        setSnackbarSeverity("error");
-      })
-      .finally(() => {
-        setSnackbarOpen(true);
+        setSnackbar({
+          open: true,
+          message: "Error occurred during assignment",
+          severity: "error",
+        });
       });
   };
 
   const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+    setSnackbar({
+      open: false,
+      message: "",
+      severity: "error",
+    });
   };
 
   return (
@@ -90,7 +92,7 @@ export const ReturnBookModal = ({
           </IconButton>
           <Typography variant="h4">Returning Book</Typography>
           <Typography variant="h6" sx={{ mb: 2, mt: 0.5 }}>
-            Rate: {bookName}
+            Rate: {selectedBorrow?.book?.name}
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
             <TextField
@@ -121,13 +123,13 @@ export const ReturnBookModal = ({
       </Modal>
 
       <Snackbar
-        open={snackbarOpen}
+        open={snackbar.open}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
-          {snackbarMessage}
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: "100%" }}>
+          {snackbar.message}
         </Alert>
       </Snackbar>
     </>
