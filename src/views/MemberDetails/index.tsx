@@ -11,9 +11,12 @@ const MemberDetails = () => {
   const { member_id } = useParams();
 
   const [member, setMember] = useState<MemberDetailsType | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchMember = useCallback(async () => {
     try {
+      setLoading(true);
+
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${member_id}`);
 
       if (!response.ok) {
@@ -24,6 +27,8 @@ const MemberDetails = () => {
       setMember(data);
     } catch {
       setMember(null);
+    } finally {
+      setLoading(false);
     }
   }, [member_id]);
 
@@ -31,7 +36,8 @@ const MemberDetails = () => {
     fetchMember();
   }, [member_id]);
 
-  if (!member) return <Error500 errorMessage={"Member not found!"} />;
+  if (loading) return <Loading />;
+  if (!member) return <Error500 errorMessage={"Member data is unavailable!"} />;
 
   return (
     <Suspense fallback={<Loading />}>

@@ -55,4 +55,4 @@ const MembersGrid = ({ members }: MemberProps) => {
   );
 };
 
-export default MembersGrid;
+export default React.memo(MembersGrid);

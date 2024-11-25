@@ -54,7 +54,7 @@ export const ReturnBookModal = ({
           setSnackbar({ open: true, message: `Error: ${error.error}`, severity: "error" });
         }
       })
-      .catch(error => {
+      .catch(() => {
         setSnackbar({
           open: true,
           message: "Error occurred during assignment",

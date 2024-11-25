@@ -1,6 +1,7 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Dispatch, SyntheticEvent, useEffect, useState } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import BooksGrid from "./components/BooksGrid";
 import { Loading } from "./components/Loading";
 import MembersGrid from "./components/MembersGrid";
@@ -10,31 +11,39 @@ import { BookType, MemberType } from "./types";
 
 const App = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const tabIndex = useSelector((state: RootState) => state.tab.index);
-  const [members, setMembers] = React.useState<MemberType[]>([]);
-  const [books, setBooks] = React.useState<BookType[]>([]);
+  const [members, setMembers] = useState<MemberType[]>([]);
+  const [books, setBooks] = useState<BookType[]>([]);
+  const [fetched, setFetched] = useState({ members: false, books: false });
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
     dispatch(setTabIndex(newValue));
   };
 
-  const fetchMembers = () => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/users`)
-      .then(response => response.json())
-      .then(data => setMembers(data));
-  };
+  const fetchData = (
+    endpoint: string,
+    setState: Dispatch<React.SetStateAction<MemberType[] | BookType[]>>
+  ) => {
+    setLoading(true);
 
-  const fetchBooks = () => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/books`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/${endpoint}`)
       .then(response => response.json())
-      .then(data => setBooks(data));
+      .then(data => setState(data))
+      .catch(() => {
+        navigate("/500");
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    if (tabIndex === 0) {
-      fetchMembers();
-    } else if (tabIndex === 1) {
-      fetchBooks();
+    if (tabIndex === 0 && !fetched.members) {
+      fetchData("users", setMembers);
+      setFetched(prev => ({ ...prev, members: true }));
+    } else if (tabIndex === 1 && !fetched.books) {
+      fetchData("books", setBooks);
+      setFetched(prev => ({ ...prev, books: true }));
     }
   }, [tabIndex]);
 
@@ -44,10 +53,13 @@ const App = () => {
         <Tab label="Members" />
         <Tab label="Books" />
       </Tabs>
-      <Suspense fallback={<Loading />}>
-        {tabIndex === 0 && members && <MembersGrid members={members} />}
-        {tabIndex === 1 && books && <BooksGrid books={books} />}
-      </Suspense>
+      {loading ? (
+        <Loading />
+      ) : tabIndex === 0 ? (
+        <MembersGrid members={members} />
+      ) : (
+        <BooksGrid books={books} />
+      )}
     </Box>
   );
 };

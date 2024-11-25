@@ -10,10 +10,14 @@ const MemberDetails = () => {
   const { book_id } = useParams();
 
   const [book, setBook] = useState<BookDetailsType | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchBook = useCallback(async () => {
+    setLoading(true);
+
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books/${book_id}`);
+      const url = `${process.env.REACT_APP_BACKEND_URL}/books/${book_id}`;
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error("Failed to fetch book data");
@@ -24,6 +28,8 @@ const MemberDetails = () => {
       setBook(data);
     } catch {
       setBook(null);
+    } finally {
+      setLoading(false);
     }
   }, [book_id]);
 
@@ -31,7 +37,8 @@ const MemberDetails = () => {
     fetchBook();
   }, [book_id]);
 
-  if (!book) return <Error500 errorMessage={"Book not found!"} />;
+  if (loading) return <Loading />;
+  if (!book) return <Error500 errorMessage={"Book data is unavailable!"} />;
 
   return (
     <Suspense fallback={<Loading />}>

@@ -2,6 +2,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
 
 const env = dotenv.config().parsed || {};
 const envKeys = Object.keys(env).reduce((prev, next) => {
@@ -44,6 +45,11 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./public/index.html",
+    }),
+    new ESLintPlugin({
+      extensions: ["ts", "tsx", "js", "jsx"],
+      emitWarning: false,
+      failOnError: true,
     }),
     new webpack.DefinePlugin(envKeys),
   ],

@@ -53,10 +53,11 @@ export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignO
             onClose();
           } else {
             const error = await response.json();
+
             setSnackbar({ open: true, message: `Error: ${error.error}`, severity: "error" });
           }
         })
-        .catch(error => {
+        .catch(() => {
           setSnackbar({
             open: true,
             message: "Error occurred during assignment",

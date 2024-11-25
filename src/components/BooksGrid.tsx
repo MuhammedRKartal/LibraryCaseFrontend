@@ -56,4 +56,4 @@ const BooksGrid = ({ books }: BookProps) => {
   );
 };
 
-export default BooksGrid;
+export default React.memo(BooksGrid);

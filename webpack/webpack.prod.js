@@ -1,6 +1,5 @@
 const { merge } = require("webpack-merge");
 const webpack = require("webpack");
-const ESLintPlugin = require("eslint-webpack-plugin");
 const common = require("./webpack.common");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
@@ -28,11 +27,6 @@ module.exports = merge(common, {
   plugins: [
     new MiniCssExtractPlugin({
       filename: "styles.[contenthash].css",
-    }),
-    new ESLintPlugin({
-      extensions: ["ts", "tsx", "js", "jsx"],
-      emitWarning: false,
-      failOnError: true,
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: "static",

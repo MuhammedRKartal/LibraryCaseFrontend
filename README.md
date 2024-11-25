@@ -15,9 +15,10 @@
 1. Set up the .env file as mentioned above.
 2. Run the command `npm install --global yarn`
 3. Run the command `yarn`
-4. Run the command `yarn start`
+4. Run the command `yarn dev`
 
 - If you want to build the project run `yarn build`
+- `yarn start`
 
 ## Tech Stack
 
