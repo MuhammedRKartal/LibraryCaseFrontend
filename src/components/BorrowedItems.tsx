@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import { Grid2, IconButton, Paper, Typography } from "@mui/material";
+import { Button, Grid2, Paper, Typography } from "@mui/material";
 import { BorrowedItemType } from "../types";
 import { ReturnBookModal } from "../views/modals/ReturnBookModal";
 
@@ -56,12 +56,18 @@ export const BorrowedItems = ({ borrows }: BorrowedItemProps) => {
             )}
 
             {!borrow.returned && (
-              <IconButton
-                sx={{ position: "absolute", right: 2, bottom: 2, fontSize: 14 }}
+              <Button
+                sx={{
+                  position: "absolute",
+                  right: 2,
+                  bottom: 2,
+                  fontSize: 14,
+                  textTransform: "capitalize",
+                }}
                 onClick={() => handleOpenModal(borrow)}
               >
                 Return <KeyboardReturnIcon fontSize="small" />
-              </IconButton>
+              </Button>
             )}
           </Paper>
         </Grid2>

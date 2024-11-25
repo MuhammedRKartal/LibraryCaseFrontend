@@ -14,7 +14,7 @@ const MemberDetails = () => {
   useEffect(() => {
     const fetchMember = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/members/${member_id}`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${member_id}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch member data");

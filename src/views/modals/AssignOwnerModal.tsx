@@ -30,7 +30,7 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
 
   useEffect(() => {
     if (open) {
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/members`)
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/users`)
         .then(response => response.json())
         .then(data => setMembers(data))
         .catch(() => {
@@ -43,7 +43,7 @@ export const AssignOwnerModal = ({ open, onClose, bookId }: AssignOwnerModalProp
 
   const handleAssign = () => {
     if (selectedMember) {
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/members/${selectedMember}/borrow/${bookId}`, {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${selectedMember}/borrow/${bookId}`, {
         method: "POST",
       })
         .then(async response => {

@@ -32,7 +32,7 @@ export const ReturnBookModal = ({
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
 
   const handleSendRating = async () => {
-    const endpoint = `${process.env.REACT_APP_BACKEND_URL}/members/${memberId}/return/${bookId}`;
+    const endpoint = `${process.env.REACT_APP_BACKEND_URL}/users/${memberId}/return/${bookId}`;
     const body = { rating };
 
     try {

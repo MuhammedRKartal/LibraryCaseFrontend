@@ -19,7 +19,7 @@ const App = () => {
   };
 
   const fetchMembers = () => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/members`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/users`)
       .then(response => response.json())
       .then(data => setMembers(data));
   };

@@ -66,7 +66,7 @@ export const BookCard = ({ book, currentOwner }: BookCardProps) => {
                 to={`/members/${currentOwner.id}`}
                 variant="text"
                 color="primary"
-                sx={{ width: "fit-content" }}
+                sx={{ width: "fit-content", textTransform: "capitalize" }}
               >
                 {currentOwner.name!}
               </Button>
