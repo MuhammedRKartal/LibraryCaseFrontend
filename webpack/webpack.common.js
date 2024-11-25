@@ -1,11 +1,9 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ESLintPlugin = require("eslint-webpack-plugin");
-const webpack = require("webpack");
 const dotenv = require("dotenv");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const env = dotenv.config().parsed || {};
-
 const envKeys = Object.keys(env).reduce((prev, next) => {
   prev[`process.env.${next}`] = JSON.stringify(env[next]);
   return prev;
@@ -14,12 +12,17 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 module.exports = {
   entry: "./src/index.tsx",
   output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.[contenthash].js",
+    path: path.resolve(__dirname, "../dist"),
     publicPath: "/",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
+  },
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+    },
   },
   module: {
     rules: [
@@ -32,25 +35,16 @@ module.exports = {
         test: /\.scss$/,
         use: ["style-loader", "css-loader", "sass-loader"],
       },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/,
+        type: "asset/resource",
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./public/index.html",
     }),
-    new ESLintPlugin({
-      extensions: ["ts", "tsx", "js", "jsx"],
-      emitWarning: true,
-      emitError: true,
-      failOnError: true,
-    }),
-    // Add DefinePlugin to expose environment variables
     new webpack.DefinePlugin(envKeys),
   ],
-  devServer: {
-    port: 3000,
-    open: true,
-    historyApiFallback: true,
-  },
-  mode: "development",
 };
