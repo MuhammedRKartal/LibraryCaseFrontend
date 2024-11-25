@@ -1,13 +1,13 @@
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { Box, Button, Paper, Typography } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { BookCard } from "../../components/BookCard";
 import { BookDetailsType } from "../../types/index";
-import Error500 from "../Scenes/500";
 import { Loading } from "../Scenes/Loading";
 
 const MemberDetails = () => {
   const { book_id } = useParams();
+  const navigate = useNavigate();
 
   const [book, setBook] = useState<BookDetailsType | null>(null);
   const [loading, setLoading] = useState(false);
@@ -19,15 +19,18 @@ const MemberDetails = () => {
       const url = `${process.env.REACT_APP_BACKEND_URL}/books/${book_id}`;
       const response = await fetch(url);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch book data");
+      if (response.ok) {
+        const data = await response.json();
+
+        setBook(data);
+      } else {
+        const error = await response.json();
+
+        navigate("/error", { state: { code: error.code, message: error.message } });
       }
-
-      const data = await response.json();
-
-      setBook(data);
     } catch {
       setBook(null);
+      navigate("/error");
     } finally {
       setLoading(false);
     }
@@ -38,7 +41,6 @@ const MemberDetails = () => {
   }, [book_id]);
 
   if (loading) return <Loading />;
-  if (!book) return <Error500 errorMessage={"Book data is unavailable!"} />;
 
   return (
     <Suspense fallback={<Loading />}>
@@ -64,7 +66,7 @@ const MemberDetails = () => {
             backgroundColor: "#fff",
           }}
         >
-          <BookCard book={book} refetchBook={fetchBook} />
+          {book && <BookCard book={book} refetchBook={fetchBook} />}
         </Paper>
       </Box>
     </Suspense>

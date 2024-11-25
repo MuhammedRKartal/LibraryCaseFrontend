@@ -1,12 +1,13 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-interface Error500Type {
-  errorMessage: string;
-}
+const ErrorComponent = () => {
+  const location = useLocation();
 
-const Error500 = ({ errorMessage }: Error500Type) => {
+  const message = location.state?.message || "An unexpected error occurred.";
+  const code = location.state?.code || "500";
+
   return (
     <Box
       sx={{
@@ -21,14 +22,14 @@ const Error500 = ({ errorMessage }: Error500Type) => {
       }}
     >
       <Typography variant="h1" fontWeight="bold" color="error" sx={{ mb: 2 }}>
-        500
+        {code}
       </Typography>
       <Typography variant="h4" fontWeight="medium" sx={{ mb: 1 }}>
         Oops! Something went wrong.
       </Typography>
-      {errorMessage && (
+      {message && (
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          {errorMessage}
+          {message}
         </Typography>
       )}
       <Button
@@ -48,4 +49,4 @@ const Error500 = ({ errorMessage }: Error500Type) => {
   );
 };
 
-export default Error500;
+export default ErrorComponent;

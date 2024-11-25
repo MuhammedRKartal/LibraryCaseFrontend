@@ -22,19 +22,29 @@ const App = () => {
     dispatch(setTabIndex(newValue));
   };
 
-  const fetchData = (
+  const fetchData = async (
     endpoint: string,
     setState: Dispatch<React.SetStateAction<MemberType[] | BookType[]>>
   ) => {
     setLoading(true);
 
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/${endpoint}`)
-      .then(response => response.json())
-      .then(data => setState(data))
-      .catch(() => {
-        navigate("/500");
-      })
-      .finally(() => setLoading(false));
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/${endpoint}`);
+
+      if (response.ok) {
+        const data = await response.json();
+
+        setState(data);
+      } else {
+        const error = await response.json();
+
+        navigate("/error", { state: { code: error.code, message: error.message } });
+      }
+    } catch {
+      navigate("/error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

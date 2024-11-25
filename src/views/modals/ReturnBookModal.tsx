@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Alert,
@@ -32,7 +32,7 @@ export const ReturnBookModal = ({
     severity: "success" as "success" | "error",
   });
 
-  const handleReturnBook = () => {
+  const handleReturnBook = useCallback(() => {
     const body = { rating };
 
     fetch(
@@ -51,7 +51,7 @@ export const ReturnBookModal = ({
         } else {
           const error = await response.json();
 
-          setSnackbar({ open: true, message: `Error: ${error.error}`, severity: "error" });
+          setSnackbar({ open: true, message: `Error: ${error.message}`, severity: "error" });
         }
       })
       .catch(() => {
@@ -61,7 +61,7 @@ export const ReturnBookModal = ({
           severity: "error",
         });
       });
-  };
+  }, [selectedBorrow, rating, refetchMember, onClose]);
 
   const handleSnackbarClose = () => {
     setSnackbar({

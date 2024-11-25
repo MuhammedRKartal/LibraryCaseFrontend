@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Alert,
@@ -31,18 +31,35 @@ export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignO
     severity: "success" as "success" | "error",
   });
 
+  const fetchMembers = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/users`);
+
+      if (response.ok) {
+        const data = await response.json();
+
+        setMembers(data);
+      } else {
+        const error = await response.json();
+
+        setSnackbar({ open: true, message: error.message, severity: "error" });
+      }
+    } catch {
+      setSnackbar({
+        open: true,
+        message: "Error occured while fetching members.",
+        severity: "error",
+      });
+    }
+  }, []);
+
   useEffect(() => {
     if (open) {
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/users`)
-        .then(response => response.json())
-        .then(data => setMembers(data))
-        .catch(() => {
-          setSnackbar({ open: true, message: "Failed to fetch members", severity: "error" });
-        });
+      fetchMembers();
     }
   }, [open]);
 
-  const handleAssign = () => {
+  const handleAssign = useCallback(() => {
     if (selectedMember) {
       fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${selectedMember}/borrow/${bookId}`, {
         method: "POST",
@@ -54,7 +71,7 @@ export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignO
           } else {
             const error = await response.json();
 
-            setSnackbar({ open: true, message: `Error: ${error.error}`, severity: "error" });
+            setSnackbar({ open: true, message: `Error: ${error.message}`, severity: "error" });
           }
         })
         .catch(() => {
@@ -65,7 +82,7 @@ export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignO
           });
         });
     }
-  };
+  }, [selectedMember, bookId, refetchBook, onClose]);
 
   const handleSnackbarClose = () => {
     setSnackbar({
@@ -107,7 +124,7 @@ export const AssignOwnerModal = ({ open, onClose, bookId, refetchBook }: AssignO
                   onChange={e => setSelectedMember(e.target.value as string)}
                   label="Select Member"
                 >
-                  {members.map(member => (
+                  {members?.map(member => (
                     <MenuItem key={member.id} value={member.id}>
                       {member?.name}
                     </MenuItem>
